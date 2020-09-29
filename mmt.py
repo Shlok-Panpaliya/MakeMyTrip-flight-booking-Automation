@@ -15,7 +15,7 @@ from config import(
     covid
 )
 
-class YatraAPI:
+class MMTApi:
     def __init__(self,base_url):
         
         options = get_web_driver_options()
@@ -30,20 +30,17 @@ class YatraAPI:
     
     def run_script(self):
         
-        #self.driver.get(base_url)
-        #self.driver.maximize_window()
-        #self.to_from_date()
-        #self.get_date()
-        #self.choose_flight()
-        #self.review()
-        
-      #  self.choose_flight()
-       # print("review")
+        self.driver.get(base_url)
+        self.driver.maximize_window()
+        self.to_from_date()
+        self.get_date()
+        self.choose_flight()
         self.review()
         self.travelers_detail()
-       # self.driver.quit()
-        self.final_payment()
-
+        self.go_to_payment()
+        self.final_checkout()
+        time.sleep(2)
+        self.driver.quit()
     def to_from_date(self):
         time.sleep(1)
         self.driver.find_element_by_xpath("//input[@id='toCity']").send_keys(arrive)
@@ -53,19 +50,7 @@ class YatraAPI:
         time.sleep(1)
         self.driver.find_element_by_xpath("//input[@id='fromCity']").send_keys(depart)
         self.act.send_keys(Keys.DOWN,Keys.ENTER).perform()
-       # time.sleep(2)
-        
-        #self.act.send_keys(Keys.TAB,Keys.TAB).perform()
-        #time.sleep(1)
-
-        
-        #ele = self.driver.find_element_by_xpath("//div[@class='DayPicker-Day']")
-        
-       # time.sleep(1)
-       # ele.click()
-     #   self.act.send_keys(Keys.ENTER).perform()
-     #   time.sleep(1)
-       # self.choose_flight()
+    
     def get_date(self):
         time.sleep(2)
         element = self.driver.find_element_by_xpath("//p[@data-cy='departureDate']")
@@ -84,7 +69,7 @@ class YatraAPI:
                         
 
     def choose_flight(self):
-        #self.driver.get('https://www.makemytrip.com/flight/search?itinerary=BOM-GAU-30/09/2020&tripType=O&paxType=A-1_C-0_I-0&intl=false&cabinClass=E')
+    
         time.sleep(5)
         element = self.driver.find_elements_by_class_name('ViewFareBtn')
         #element1 = self.driver.find_elements_by_class_name('actual-price')
@@ -101,13 +86,11 @@ class YatraAPI:
         time.sleep(2)
 
     def review(self):
-        url = 'https://www.makemytrip.com/flight/review/?itineraryId=6c6226db0de57e1e497000ea2f27d546ad184632&rKey=RKEY:e38720c7-b4a3-4099-a546-4c2461bf109e:2_0&crId=499fb268-2c34-414b-bc54-8ba2def5c062&cur=INR&openFF=undefined&xflt=eyJjIjoiRSIsInAiOiJBLTFfQy0wX0ktMCIsInQiOiIiLCJzIjoiUE5RLUpBSS0yMDIwMTAwOCJ9&ccde=IN'
-        self.driver.get(url)
-        self.driver.maximize_window()
+       
         time.sleep(1)
         self.driver.switch_to.window(self.driver.window_handles[-1])
         
-       # time.sleep(2)
+        time.sleep(2)
         #print(self.driver.current_url)
         
         if secure == 'y':
@@ -126,12 +109,9 @@ class YatraAPI:
         element1.click() 
 
     def travelers_detail(self):
-       # self.driver.get('https://www.makemytrip.com/flight/traveller/?itineraryId=4746b17ce3aa9299cb937237d10820e8541cfb39&crId=499fb268-2c34-414b-bc54-8ba2def5c062&cur=INR')
-       # element = self.driver.find_element_by_xpath("//p[@class='viewAll-trvlr']/a")
-        #
+      
         time.sleep(2)
         ele = self.driver.find_elements_by_class_name('font14')
-       # print(ele)
         for i in ele:
         #    print(i.text)
             if i.text == '+ ADD ADULT':
@@ -143,10 +123,11 @@ class YatraAPI:
         arr[0].send_keys('Shlok')
         arr[1].send_keys('Panpaliya')
         gender = self.driver.find_element_by_xpath("//label[@tabindex='0']")
-        time.sleep(2)
+        time.sleep(1)
         gender.click()
         arr[2].send_keys('1234567891')
         arr[3].send_keys('asd@gmail.com')
+        time.sleep(2)
         if covid =='y':
             covid_test = self.driver.find_element_by_xpath("//a[@class='font16 LatoBold paddL15']")
             time.sleep(2)
@@ -154,24 +135,21 @@ class YatraAPI:
         time.sleep(2)
         self.driver.find_element_by_class_name('ack-cta').click()
 
-        
-        
 
-
-    def final_payment(self):
-       # self.driver.get('https://www.makemytrip.com/flight/ancillary/?crId=499fb268-2c34-414b-bc54-8ba2def5c062&itineraryId=ae11f780df6a6546e42f951d38de3c5eab951a80')
+    def go_to_payment(self):
         time.sleep(2)
         okay1 = self.driver.find_element_by_class_name('fli_secondry_btn')
-        print(okay1)
         time.sleep(1)
         okay1.click()
-        #okay = self.driver.find_element_by_xpath("//a[@class='fli_secondry_btn btn text-uppercase']")
         time.sleep(1)
       #  okay.click() 
        # time.sleep(1)
-        # payment_page = self.driver.find_element_by_xpath("//a[@id='ancillary-continue']")
-        # time.sleep(1)
-        # payment_page.click()
+        payment_page = self.driver.find_element_by_xpath("//a[@id='ancillary-secondary']")
+        time.sleep(1)
+        payment_page.click()
+        time.sleep(2)
+        skip = self.driver.find_element_by_class_name('fli_secondry_btn')
+        skip.click()
        # e = self.driver.find_elements_by_class_name('ancillary-nav-icon')[1]
        # time.sleep(1)
        # e.click()
@@ -181,9 +159,24 @@ class YatraAPI:
         #time.sleep(2)
        # print(e1.text)
         #e1.click()
+    def final_checkout(self):
+      
+        time.sleep(2)
+        self.driver.switch_to.window(self.driver.window_handles[-1])
+        time.sleep(3)
+        print(self.driver.current_url)
+        card = self.driver.find_elements_by_xpath("//li[@class='tab_section_list']")
+        #card = self.driver.find_elements_by_class_name('tab_section_list')
+        time.sleep(2)
+        card[2].click()
+        time.sleep(1)
+        card_no = self.driver.find_element_by_xpath("//input[@id='PAYMENT_cardNumber']")
+        card_no.send_keys('12121212121212')
+        name = self.driver.find_element_by_xpath("//input[@id='PAYMENT_nameOnCard']")
+        name.send_keys('Shlok Panpaliya')
+       # expiry_month = self.driver.find_element_by_xpath("//select[@id='PAYMENT_expiryMonth']").click()
 
-        
 if __name__ == "__main__":
-    Yatra = YatraAPI(base_url)
-    Yatra.run_script()
+    MMT = MMTApi(base_url)
+    MMT.run_script()
     
