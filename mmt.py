@@ -10,7 +10,9 @@ from config import(
     base_url,
     depart,
     arrive,
-    departure_date
+    departure_date,
+    secure,
+    covid
 )
 
 class YatraAPI:
@@ -28,17 +30,20 @@ class YatraAPI:
     
     def run_script(self):
         
-        self.driver.get(base_url)
-        self.driver.maximize_window()
-        self.to_from_date()
-        self.get_date()
+        #self.driver.get(base_url)
+        #self.driver.maximize_window()
+        #self.to_from_date()
+        #self.get_date()
+        #self.choose_flight()
+        #self.review()
         
       #  self.choose_flight()
        # print("review")
-       # self.review()
-      #  self.travelers_detail()
+        self.review()
+        self.travelers_detail()
        # self.driver.quit()
-        #self.final_payment()
+        self.final_payment()
+
     def to_from_date(self):
         time.sleep(1)
         self.driver.find_element_by_xpath("//input[@id='toCity']").send_keys(arrive)
@@ -53,7 +58,7 @@ class YatraAPI:
         #self.act.send_keys(Keys.TAB,Keys.TAB).perform()
         #time.sleep(1)
 
-       # self.driver.find_element_by_class_name('widgetSearchBtn').click()
+        
         #ele = self.driver.find_element_by_xpath("//div[@class='DayPicker-Day']")
         
        # time.sleep(1)
@@ -62,68 +67,68 @@ class YatraAPI:
      #   time.sleep(1)
        # self.choose_flight()
     def get_date(self):
-        time.sleep(1)
+        time.sleep(2)
         element = self.driver.find_element_by_xpath("//p[@data-cy='departureDate']")
-        #element = self.driver.find_element_by_class_name('latoBold appendBottom10')
-       # print(element)
-      #  time.sleep(2)
+        
+        time.sleep(2)
         element.click()
 
-      #  check = self.driver.find_element_by_xpath("//div[]")
-
         check = self.driver.find_element_by_xpath("//div[@aria-label='" +departure_date+ "']")
-        check.click()
-        # time.sleep(5)
-        #print(check.)
+
         if check.get_attribute('aria-disabled') == 'false':
             check.click()
         else:
             print("Flight not available on that day") 
+        
+        self.driver.find_element_by_class_name('widgetSearchBtn').click()
                         
 
     def choose_flight(self):
-        self.driver.get('https://www.makemytrip.com/flight/search?itinerary=BOM-GAU-30/09/2020&tripType=O&paxType=A-1_C-0_I-0&intl=false&cabinClass=E')
-        time.sleep(8)
+        #self.driver.get('https://www.makemytrip.com/flight/search?itinerary=BOM-GAU-30/09/2020&tripType=O&paxType=A-1_C-0_I-0&intl=false&cabinClass=E')
+        time.sleep(5)
         element = self.driver.find_elements_by_class_name('ViewFareBtn')
         #element1 = self.driver.find_elements_by_class_name('actual-price')
         element2 = self.driver.find_elements_by_class_name('fli_primary_btn')
-        print(element,element2)
-        flag = 0
+       # print(element,element2)
+        #flag = 0
         #element2[0].click()
         if not element:
-          #  print('hi')
-           # self.act.click_and_hold(element2[0])
-            #self.act.release(element2[0])
-          
-          
-            #     print('hi1')
             element2[0].click()
-            
-            
         else:
-            
-            
             element[0].click()
             time.sleep(1)
             element2[0].click()
-        time.sleep(5)
+        time.sleep(2)
+
     def review(self):
-        self.driver.switch_to.window(self.driver.window_handles[-1])
-    #    self.driver.get('https://www.makemytrip.com/flight/review/?itineraryId=588fc7a93edf21f096f8425be35f65d1525b7c91&rKey=RKEY:48e61b65-58d5-4c81-a9e3-58d03ca72429:11_0&crId=4d107627-16e7-4504-84d0-b3f8e14e72c8&cur=INR&openFF=undefined&xflt=eyJjIjoiRSIsInAiOiJBLTFfQy0wX0ktMCIsInQiOiIiLCJzIjoiQk9NLUdBVS0yMDIwMDkzMCJ9&ccde=IN')
-       # time.sleep(2)
-        print(self.driver.current_url)
-        element = self.driver.find_element_by_xpath("//input[@type='radio']")
+        url = 'https://www.makemytrip.com/flight/review/?itineraryId=6c6226db0de57e1e497000ea2f27d546ad184632&rKey=RKEY:e38720c7-b4a3-4099-a546-4c2461bf109e:2_0&crId=499fb268-2c34-414b-bc54-8ba2def5c062&cur=INR&openFF=undefined&xflt=eyJjIjoiRSIsInAiOiJBLTFfQy0wX0ktMCIsInQiOiIiLCJzIjoiUE5RLUpBSS0yMDIwMTAwOCJ9&ccde=IN'
+        self.driver.get(url)
+        self.driver.maximize_window()
         time.sleep(1)
-        element.click()
+        self.driver.switch_to.window(self.driver.window_handles[-1])
+        
+       # time.sleep(2)
+        #print(self.driver.current_url)
+        
+        if secure == 'y':
+            element = self.driver.find_elements_by_xpath("//input[@type='radio']")[0]
+            time.sleep(1)
+            element.click()
+        else:
+            element = self.driver.find_elements_by_xpath("//input[@type='radio']")[1]
+            print(element)    
+            time.sleep(1)
+            element.click()
        
-            
         time.sleep(1)
         element1 = self.driver.find_element_by_class_name('fli_primary_btn')
         time.sleep(2)
         element1.click() 
+
     def travelers_detail(self):
-        self.driver.get('https://www.makemytrip.com/flight/traveller/?itineraryId=87aab543d283ad4c0c11e240cbaba425be4a16da&crId=cfba6ce3-e0c6-407f-8831-342f2c88ec6a&cur=INR')
+       # self.driver.get('https://www.makemytrip.com/flight/traveller/?itineraryId=4746b17ce3aa9299cb937237d10820e8541cfb39&crId=499fb268-2c34-414b-bc54-8ba2def5c062&cur=INR')
        # element = self.driver.find_element_by_xpath("//p[@class='viewAll-trvlr']/a")
+        #
         time.sleep(2)
         ele = self.driver.find_elements_by_class_name('font14')
        # print(ele)
@@ -132,24 +137,47 @@ class YatraAPI:
             if i.text == '+ ADD ADULT':
                 add = i
          #       print('hi')
+        time.sleep(1)
         add.click()
         arr = self.driver.find_elements_by_class_name('tvlrInput')
         arr[0].send_keys('Shlok')
         arr[1].send_keys('Panpaliya')
-        self.driver.find_element_by_xpath("//label[@tabindex='0']").click()
+        gender = self.driver.find_element_by_xpath("//label[@tabindex='0']")
+        time.sleep(2)
+        gender.click()
         arr[2].send_keys('1234567891')
         arr[3].send_keys('asd@gmail.com')
+        if covid =='y':
+            covid_test = self.driver.find_element_by_xpath("//a[@class='font16 LatoBold paddL15']")
+            time.sleep(2)
+            covid_test.click()
+        time.sleep(2)
         self.driver.find_element_by_class_name('ack-cta').click()
 
+        
+        
+
+
     def final_payment(self):
-        self.driver.get('http://makemytrip.com/flight/ancillary/?crId=cfba6ce3-e0c6-407f-8831-342f2c88ec6a&itineraryId=87aab543d283ad4c0c11e240cbaba425be4a16da')
+       # self.driver.get('https://www.makemytrip.com/flight/ancillary/?crId=499fb268-2c34-414b-bc54-8ba2def5c062&itineraryId=ae11f780df6a6546e42f951d38de3c5eab951a80')
         time.sleep(2)
-        e = self.driver.find_elements_by_class_name('ancillary-nav-icon')[1]
+        okay1 = self.driver.find_element_by_class_name('fli_secondry_btn')
+        print(okay1)
         time.sleep(1)
-        e.click()
-        e1 = self.driver.find_element_by_id('ancillary-secondary')
+        okay1.click()
+        #okay = self.driver.find_element_by_xpath("//a[@class='fli_secondry_btn btn text-uppercase']")
         time.sleep(1)
-        self.act.click(e1)
+      #  okay.click() 
+       # time.sleep(1)
+        # payment_page = self.driver.find_element_by_xpath("//a[@id='ancillary-continue']")
+        # time.sleep(1)
+        # payment_page.click()
+       # e = self.driver.find_elements_by_class_name('ancillary-nav-icon')[1]
+       # time.sleep(1)
+       # e.click()
+       # e1 = self.driver.find_element_by_id('ancillary-secondary')
+       # time.sleep(1)
+       # self.act.click(e1)
         #time.sleep(2)
        # print(e1.text)
         #e1.click()
