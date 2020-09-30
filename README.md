@@ -20,7 +20,7 @@ chrome version: Settings-> About
 ## Setup
 #### make a folder
 ```
-mkdir amazon_web_scrappe
+mkdir MMT
 cd MMT
 ```
 #### Setup a Virtual Enviornment
